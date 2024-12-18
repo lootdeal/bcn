@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+struct Student {
+    int rollNo;
+    string name;
+    float sgpa;
+};
+
+void sortStudents(Student students[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (students[j].name > students[j + 1].name) {
+                Student temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int binarySearchByName(Student students[], int n, string targetName) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (students[mid].name == targetName) {
+            return mid;
+        } else if (students[mid].name < targetName) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+
+int main() {
+    int n = 5;
+    Student students[] = {
+        {1, "Alice", 9.2},
+        {2, "Bob", 8.5},
+        {3, "Charlie", 9.0},
+        {4, "David", 8.8},
+        {5, "Eve", 9.4}
+    };
+
+    sortStudents(students, n);
+
+    string targetName;
+    cout << "Enter the name of the student to search: ";
+    cin >> targetName;
+
+    int index = binarySearchByName(students, n, targetName);
+
+    if (index != -1) {
+        cout << "Student found:\n";
+        cout << "Roll No: " << students[index].rollNo << ", Name: " << students[index].name << ", SGPA: " << students[index].sgpa << endl;
+    } else {
+        cout << "Student not found.\n";
+    }
+
+    return 0;
+}

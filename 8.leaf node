@@ -1,0 +1,66 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+    Node(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class BST {
+    Node* root;
+
+    Node* insert(Node* node, int value) {
+        if (!node) return new Node(value);
+        if (value < node->data) node->left = insert(node->left, value);
+        else node->right = insert(node->right, value);
+        return node;
+    }
+
+    bool search(Node* node, int value) {
+        if (!node) return false;
+        if (node->data == value) return true;
+        return value < node->data ? search(node->left, value) : search(node->right, value);
+    }
+
+    int depth(Node* node) {
+        if (!node) return 0;
+        return 1 + max(depth(node->left), depth(node->right));
+    }
+
+    void displayLeafNodes(Node* node) {
+        if (!node) return;
+        if (!node->left && !node->right) cout << node->data << " ";
+        displayLeafNodes(node->left);
+        displayLeafNodes(node->right);
+    }
+
+public:
+    BST() : root(nullptr) {}
+
+    void insert(int value) { root = insert(root, value); }
+    void search(int value) { cout << (search(root, value) ? "Found" : "Not Found") << endl; }
+    void displayDepth() { cout << "Depth: " << depth(root) << endl; }
+    void displayLeafNodes() { cout << "Leaf nodes: "; displayLeafNodes(root); cout << endl; }
+};
+
+int main() {
+    BST bst;
+    int choice, value;
+    do {
+        cout << "\n1. Insert\n2. Search\n3. Depth\n4. Leaf Nodes\n5. Exit\nEnter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: cout << "Enter value: "; cin >> value; bst.insert(value); break;
+            case 2: cout << "Enter value to search: "; cin >> value; bst.search(value); break;
+            case 3: bst.displayDepth(); break;
+            case 4: bst.displayLeafNodes(); break;
+            case 5: break;
+            default: cout << "Invalid choice\n";
+        }
+    } while (choice != 5);
+
+    return 0;
+}

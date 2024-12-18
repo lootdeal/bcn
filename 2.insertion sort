@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Student {
+    int rollNo;
+    string name;
+    float sgpa;
+};
+
+void insertionSort(Student students[], int n) {
+    for (int i = 1; i < n; i++) {
+        Student key = students[i];
+        int j = i - 1;
+        while (j >= 0 && students[j].name > key.name) {
+            students[j + 1] = students[j];
+            j--;
+        }
+        students[j + 1] = key;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter number of students: ";
+    cin >> n;
+    Student students[n];
+    for (int i = 0; i < n; i++) {
+        cout << "Enter roll no, name and SGPA: ";
+        cin >> students[i].rollNo >> students[i].name >> students[i].sgpa;
+    }
+    insertionSort(students, n);
+    cout << "Sorted list of students by name: \n";
+    for (int i = 0; i < n; i++) {
+        cout << students[i].rollNo << " " << students[i].name << " " << students[i].sgpa << endl;
+    }
+    return 0;
+}

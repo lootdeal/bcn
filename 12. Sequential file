@@ -1,0 +1,83 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+struct Student {
+    int rollNumber;
+    string name;
+    string division;
+    string address;
+};
+
+void addStudent() {
+    ofstream file("students.dat", ios::app | ios::binary);
+    if (!file) {
+        cout << "Error opening file!" << endl;
+        return;
+    }
+
+    Student student;
+    cin >> student.rollNumber;
+    cin.ignore();
+    getline(cin, student.name);
+    getline(cin, student.division);
+    getline(cin, student.address);
+
+    file.write((char*)&student, sizeof(Student));
+    file.close();
+    cout << "Student added!" << endl;
+}
+
+void searchStudent() {
+    ifstream file("students.dat", ios::in | ios::binary);
+    if (!file) {
+        cout << "Error opening file!" << endl;
+        return;
+    }
+
+    int rollNumber;
+    cin >> rollNumber;
+
+    Student student;
+    bool found = false;
+    while (file.read((char*)&student, sizeof(Student))) {
+        if (student.rollNumber == rollNumber) {
+            cout << student.rollNumber << " " << student.name << " " << student.division << " " << student.address << endl;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) cout << "Not found." << endl;
+    file.close();
+}
+
+void displayStudents() {
+    ifstream file("students.dat", ios::in | ios::binary);
+    if (!file) {
+        cout << "Error opening file!" << endl;
+        return;
+    }
+
+    Student student;
+    while (file.read((char*)&student, sizeof(Student))) {
+        cout << student.rollNumber << " " << student.name << " " << student.division << " " << student.address << endl;
+    }
+    file.close();
+}
+
+int main() {
+    int choice;
+    do {
+        cin >> choice;
+        switch (choice) {
+            case 1: addStudent(); break;
+            case 2: searchStudent(); break;
+            case 3: displayStudents(); break;
+            case 4: cout << "Exit"; break;
+            default: cout << "Invalid"; break;
+        }
+    } while (choice != 4);
+    return 0;
+}

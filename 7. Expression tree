@@ -1,0 +1,95 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+struct Node {
+    char data;
+    Node* left;
+    Node* right;
+    Node(char value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class ExpressionTree {
+public:
+    Node* constructFromPostfix(const string& postfix) {
+        stack<Node*> st;
+        for (char ch : postfix) {
+            if (isOperand(ch)) st.push(new Node(ch));
+            else {
+                Node* node = new Node(ch);
+                node->right = st.top(); st.pop();
+                node->left = st.top(); st.pop();
+                st.push(node);
+            }
+        }
+        return st.top();
+    }
+
+    Node* constructFromPrefix(const string& prefix) {
+        stack<Node*> st;
+        for (int i = prefix.length() - 1; i >= 0; --i) {
+            if (isOperand(prefix[i])) st.push(new Node(prefix[i]));
+            else {
+                Node* node = new Node(prefix[i]);
+                node->left = st.top(); st.pop();
+                node->right = st.top(); st.pop();
+                st.push(node);
+            }
+        }
+        return st.top();
+    }
+
+    void inorder(Node* root) {
+        if (root) {
+            inorder(root->left);
+            cout << root->data << " ";
+            inorder(root->right);
+        }
+    }
+
+    void preorder(Node* root) {
+        if (root) {
+            cout << root->data << " ";
+            preorder(root->left);
+            preorder(root->right);
+        }
+    }
+
+    void postorder(Node* root) {
+        if (root) {
+            postorder(root->left);
+            postorder(root->right);
+            cout << root->data << " ";
+        }
+    }
+
+private:
+    bool isOperand(char ch) {
+        return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
+    }
+};
+
+int main() {
+    ExpressionTree tree;
+    Node* root = nullptr;
+    string expression;
+    int choice;
+
+    do {
+        cout << "\n1. Postfix\n2. Prefix\n3. In-order\n4. Pre-order\n5. Post-order\n6. Exit\nEnter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: cin >> expression; root = tree.constructFromPostfix(expression); break;
+            case 2: cin >> expression; root = tree.constructFromPrefix(expression); break;
+            case 3: tree.inorder(root); cout << endl; break;
+            case 4: tree.preorder(root); cout << endl; break;
+            case 5: tree.postorder(root); cout << endl; break;
+            case 6: break;
+            default: cout << "Invalid choice\n";
+        }
+    } while (choice != 6);
+
+    return 0;
+}

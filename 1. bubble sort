@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Student {
+    int rollNo;
+    string name;
+    float sgpa;
+};
+
+void bubbleSort(Student students[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (students[j].rollNo > students[j + 1].rollNo) {
+                swap(students[j], students[j + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    Student students[n];
+
+    for (int i = 0; i < n; i++) {
+        cin >> students[i].rollNo;
+        cin.ignore();
+        getline(cin, students[i].name);
+        cin >> students[i].sgpa;
+    }
+
+    bubbleSort(students, n);
+
+    for (int i = 0; i < n; i++) {
+        cout << students[i].rollNo << " " << students[i].name << " " << students[i].sgpa << endl;
+    }
+
+    return 0;
+}
